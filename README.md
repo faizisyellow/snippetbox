@@ -1,1 +1,1 @@
-# snippetbox
+# snippetbox a web application for share snippets of text 
