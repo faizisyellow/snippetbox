@@ -50,7 +50,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createSnipper(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method != "POST" {
 		w.Header().Set("Allow", "POST")
 		http.Error(w, "Method Not Allowed", methodNotAllowed)
 		return
