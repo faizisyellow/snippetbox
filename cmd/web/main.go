@@ -5,12 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-)
 
-type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-}
+	"faizisyellow.com/snippetbox/cmd/web/config"
+	"faizisyellow.com/snippetbox/cmd/web/handlers"
+)
 
 func main() {
 	/* @page 103 */
@@ -33,14 +31,14 @@ func main() {
 	errorLog := log.New(os.Stderr, "\033[31mERROR\t\033[0m", log.Ldate|log.Ltime|log.Lshortfile)
 
 	// Initialize a new instance of application containing the dependencies.
-	app := &application{
-		infoLog:  infoLog,
-		errorLog: errorLog,
+	app := &config.Aplication{
+		InfoLog:  infoLog,
+		ErrorLog: errorLog,
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet", app.showSnippet)
-	mux.HandleFunc("/snippet/create", app.createSnipper)
+	mux.HandleFunc("/", handlers.Home(app))
+	mux.HandleFunc("/snippet", handlers.ShowSnippet(app))
+	mux.HandleFunc("/snippet/create", handlers.CreateSnipper(app))
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 
