@@ -3,11 +3,13 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 type application struct {
@@ -18,12 +20,15 @@ type application struct {
 func main() {
 	/* @page 126 */
 
-	os.Setenv("mysql", "root:F@!$$@l343477s@/snippetbox?parseTime=true")
-
+	// Load the .env file
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Printf("error get env %v", err.Error())
+	}
 	// Define a new command-line flag with the name 'addr'. The value of
 	// flag will be stored in the addr variable at runtime.
 	addr := flag.String("addr", "localhost:4000", "HTTP network address")
-	dsn := flag.String("dsn", os.Getenv("mysql"), "MySQL connections string")
+	dsn := flag.String("dsn", os.Getenv("DB_URL"), "MySQL connections string")
 
 	// Importantly, we use the flag.Parse() function to parse the command-line
 	// This reads in the command-line flag value and assigns it to the addr
