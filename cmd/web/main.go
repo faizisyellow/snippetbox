@@ -4,21 +4,27 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 
+	"faizisyellow.com/snippetbox/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
 
+// Add a snippets field to the application struct. This will allow us to
+// make the SnippetModel object and all dependencies available to our handlers.
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	snippets      *mysql.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
-	/* @page 126 */
+	/* @page 135 */
 
 	// Load the .env file
 	err := godotenv.Load(".env")
@@ -51,10 +57,20 @@ func main() {
 	// before the main() function exits.
 	defer db.Close()
 
+	// Initialize a new template cache...
+	templateCache, err := newTemplateCache("./ui/html")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	// Initialize a new instance of application containing the dependencies.
 	app := &application{
 		infoLog:  infoLog,
 		errorLog: errorLog,
+		snippets: &mysql.SnippetModel{
+			DB: db,
+		},
+		templateCache: templateCache,
 	}
 
 	// Initialize a new http.Server struct. We set the Addr and Handler fields
