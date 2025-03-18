@@ -96,6 +96,8 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	// template passing in the validation errors and previously submitted
 	// r.PostForm data.
 	if len(errors) > 0 {
+
+		// TODO: still not displaying errors message
 		app.render(w, r, "create.page.tmpl", &templateData{
 			FormErrors: errors,
 			FormData:   r.PostForm,
