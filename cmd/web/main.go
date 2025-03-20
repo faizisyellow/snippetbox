@@ -8,9 +8,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"faizisyellow.com/snippetbox/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golangcollege/sessions"
 	"github.com/joho/godotenv"
 )
 
@@ -19,6 +21,7 @@ import (
 type application struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
+	session       *sessions.Session
 	snippets      *mysql.SnippetModel
 	templateCache map[string]*template.Template
 }
@@ -35,6 +38,10 @@ func main() {
 	// flag will be stored in the addr variable at runtime.
 	addr := flag.String("addr", "localhost:4000", "HTTP network address")
 	dsn := flag.String("dsn", os.Getenv("DB_URL"), "MySQL connections string")
+
+	// will be used to encrypt and authenticate session cookies). It should be
+	// 32 bytes long.
+	secrect := flag.String("secret", os.Getenv("Session_Secret"), "Secrect key")
 
 	// Importantly, we use the flag.Parse() function to parse the command-line
 	// This reads in the command-line flag value and assigns it to the addr
@@ -63,10 +70,17 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	// Use the sessions.New() function to initialize a new session manager,
+	// passing in the secret key as the parameter. Then we configure it so
+	// sessions always expires after 12 hours.
+	session := sessions.New([]byte(*secrect))
+	session.Lifetime = 12 * time.Hour
+
 	// Initialize a new instance of application containing the dependencies.
 	app := &application{
 		infoLog:  infoLog,
 		errorLog: errorLog,
+		session:  session,
 		snippets: &mysql.SnippetModel{
 			DB: db,
 		},
