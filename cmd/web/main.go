@@ -99,7 +99,11 @@ func main() {
 
 	// Write messages using the two new loggers, instead of the standard logger
 	infoLog.Printf("Starting server on %s", *addr)
-	err = srv.ListenAndServe()
+
+	// Use the ListenAndServeTLS() method to start the HTTPS server. We
+	// pass in the paths to the TLS certificate and corresponding private key a
+	// the two parameters.
+	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
 
