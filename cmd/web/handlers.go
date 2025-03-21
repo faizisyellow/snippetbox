@@ -152,7 +152,10 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display the login user form "))
+	app.render(w, r, "login.page.tmpl", &templateData{
+		// ever wonder why declare form ? it's initialize the form data idiot :)
+		Form: forms.New(nil),
+	})
 }
 
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
