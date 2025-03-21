@@ -17,6 +17,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type contextKey string
+
+var contextKeyUser = contextKey("user")
+
 // Add a snippets field to the application struct. This will allow us to
 // make the SnippetModel object and all dependencies available to our handlers.
 type application struct {
