@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"flag"
 	"fmt"
@@ -87,14 +88,26 @@ func main() {
 		templateCache: templateCache,
 	}
 
+	// Initialize a tls.Config struct to hold the non-default TLS settings we want
+	// the server to use.
+	tlsConfig := &tls.Config{
+		PreferServerCipherSuites: true,
+		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
+
 	// Initialize a new http.Server struct. We set the Addr and Handler fields
 	// that the server uses the same network address and routes as before, and
 	// the ErrorLog field so that the server now uses the custom errorLog logger
 	// the event of any problems.
 	srv := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  app.routes(),
+		Addr:      *addr,
+		ErrorLog:  errorLog,
+		Handler:   app.routes(),
+		TLSConfig: tlsConfig,
+		// Add Idle, Read and Write timeouts to the server.
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	// Write messages using the two new loggers, instead of the standard logger
