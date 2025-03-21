@@ -99,3 +99,23 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	// Redirect the user to the relevant page for the snippet.
 	http.Redirect(w, r, fmt.Sprintf("/snippet/%d", id), http.StatusSeeOther)
 }
+
+func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Display the new user signup form"))
+}
+
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Create new user"))
+}
+
+func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Display the login user form "))
+}
+
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Authenticate and login the user"))
+}
+
+func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Logout the user"))
+}
