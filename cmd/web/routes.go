@@ -9,8 +9,8 @@ import (
 func (app *application) routes() http.Handler {
 	mux := pat.New()
 	mux.Get("/", app.session.Enable(http.HandlerFunc(app.home)))
-	mux.Get("/snippet/create", app.session.Enable(http.HandlerFunc(app.createSnippetForm)))
-	mux.Post("/snippet/create", app.session.Enable(http.HandlerFunc(app.createSnippet)))
+	mux.Get("/snippet/create", app.session.Enable(app.requireAuthenticatedUser(http.HandlerFunc(app.createSnippetForm))))
+	mux.Post("/snippet/create", app.session.Enable(app.requireAuthenticatedUser(http.HandlerFunc(app.createSnippet))))
 	mux.Get("/snippet/:id", app.session.Enable(http.HandlerFunc(app.showSnippet)))
 
 	// users routes
