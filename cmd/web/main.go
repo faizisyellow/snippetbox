@@ -42,7 +42,6 @@ type application struct {
 }
 
 func main() {
-	/* @next page 432 */
 
 	// Load the .env file
 	err := godotenv.Load(".env")
