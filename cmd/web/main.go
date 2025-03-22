@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"faizisyellow.com/snippetbox/pkg/models"
 	"faizisyellow.com/snippetbox/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golangcollege/sessions"
@@ -24,12 +25,20 @@ var contextKeyUser = contextKey("user")
 // Add a snippets field to the application struct. This will allow us to
 // make the SnippetModel object and all dependencies available to our handlers.
 type application struct {
-	errorLog      *log.Logger
-	infoLog       *log.Logger
-	session       *sessions.Session
-	snippets      *mysql.SnippetModel
+	errorLog *log.Logger
+	infoLog  *log.Logger
+	session  *sessions.Session
+	snippets interface {
+		Insert(string, string, string) (int, error)
+		Get(int) (*models.Snippet, error)
+		Latest() ([]*models.Snippet, error)
+	}
 	templateCache map[string]*template.Template
-	users         *mysql.UserModel
+	users         interface {
+		Insert(string, string, string) error
+		Authenticate(string, string) (int, error)
+		Get(int) (*models.User, error)
+	}
 }
 
 func main() {

@@ -13,9 +13,9 @@ var mockUser = &models.User{
 	Created: time.Now(),
 }
 
-type userModel struct{}
+type UserModel struct{}
 
-func (m *userModel) Insert(name, email, password string) error {
+func (m *UserModel) Insert(name, email, password string) error {
 	switch email {
 	case "lizzymcalpine@gmail.com":
 		return models.ErrDuplicateEmail
@@ -24,7 +24,7 @@ func (m *userModel) Insert(name, email, password string) error {
 	}
 }
 
-func (m *userModel) Authenticate(email, password string) (int, error) {
+func (m *UserModel) Authenticate(email, password string) (int, error) {
 	switch email {
 	case "lizzymcalpine@gmail.com":
 		return 1, nil
@@ -33,7 +33,7 @@ func (m *userModel) Authenticate(email, password string) (int, error) {
 	}
 }
 
-func (m *userModel) Get(id int) (*models.User, error) {
+func (m *UserModel) Get(id int) (*models.User, error) {
 	switch id {
 	case 1:
 		return mockUser, nil
