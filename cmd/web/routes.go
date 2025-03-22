@@ -23,5 +23,6 @@ func (app *application) routes() http.Handler {
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))
 
+	mux.Get("/ping", http.HandlerFunc(app.ping))
 	return app.recoverPanic(app.logRequest(secureHeaders(mux)))
 }
